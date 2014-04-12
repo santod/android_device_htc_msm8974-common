@@ -64,6 +64,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
+    frameworks/native/data/etc/android.hardware.consumerir.xml:system/etc/permissions/android.hardware.consumerir.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
@@ -122,6 +123,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     qrngd
 
+# Touchscreen
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.input.noresample=1
+
 # USB
 PRODUCT_PACKAGES += \
     com.android.future.usb.accessory
@@ -130,6 +135,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     make_ext4fs \
     setup_fs
+
+PRODUCT_PACKAGES += \
+    libnetcmdiface
 
 # WPA supplicant config
 PRODUCT_COPY_FILES += \
@@ -158,12 +166,24 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/idc/projector_input.idc:system/usr/idc/projector_input.idc \
     $(LOCAL_PATH)/idc/synaptics-rmi-touchscreen.idc:system/usr/idc/synaptics-rmi-touchscreen.idc
 
+# Recovery
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.cwm.enable_key_repeat=true \
+    ro.cwm.repeatable_keys=114,115 \
+    ro.cwm.forbid_format=/boot,/devlog,/fataldevlog,/reserve,/firmware/radio,/firmware/adsp,/firmware/wcnss,/custdata \
+    ro.cwm.forbid_mount=/boot,/devlog,/fataldevlog,/reserve,/firmware/radio,/firmware/adsp,/firmware/wcnss,/custdata
+
 # Misc Packages
 PRODUCT_PACKAGES += \
     Torch
 
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    persist.sys.usb.config=mtp
+
 # Common build properties
 PRODUCT_PROPERTY_OVERRIDES += \
+    debug.nfc.fw_download=true \
+    debug.nfc.fw_boot_download=false \
     com.qc.hardware=true \
     debug.composition.type=dyn \
     debug.egl.hw=1 \
@@ -181,6 +201,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.sf.lcd_density=420 \
     ro.telephony.call_ring.multiple=0 \
     ro.use_data_netmgrd=true \
-    wifi.interface=wlan0
+    wifi.interface=wlan0 \
+    ro.vendor.extension_library=/system/vendor/lib/libqc-opt.so
 
 $(call inherit-product-if-exists, hardware/qcom/msm8x74/msm8x74.mk)
