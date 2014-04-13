@@ -27,7 +27,7 @@ $(call inherit-product-if-exists, frameworks/native/build/phone-xxhdpi-2048-hwui
 
 # this should go away when we finish blobs, our device-specific repos
 # should inherit m8-common by themselves
-$(call inherit-product-if-exists, vendor/htc/m8/m8-vendor.mk)
+$(call inherit-product-if-exists, vendor/htc/m8-common/m8-common-vendor.mk)
 
 ## overlays
 DEVICE_PACKAGE_OVERLAYS += device/htc/msm8974-common/overlay
@@ -203,6 +203,29 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.call_ring.multiple=0 \
     ro.use_data_netmgrd=true \
     wifi.interface=wlan0 \
-    ro.vendor.extension_library=/system/vendor/lib/libqc-opt.so
+    ro.vendor.extension_library=/system/vendor/lib/libqc-opt.so \
+    rild.libpath=/vendor/lib/libril-qc-qmi-1.so \
+    rild.libargs="-d /dev/smd0" \
+    ro.baseband.arch=msm \
+    persist.radio.jbims=1 \
+    persist.rild.nitz_plmn="" \
+    persist.rild.nitz_long_ons_0="" \
+    persist.rild.nitz_long_ons_1="" \
+    persist.rild.nitz_long_ons_2="" \
+    persist.rild.nitz_long_ons_3="" \
+    persist.rild.nitz_short_ons_0="" \
+    persist.rild.nitz_short_ons_1="" \
+    persist.rild.nitz_short_ons_2="" \
+    persist.rild.nitz_short_ons_3="" \
+    ril.subscription.types=NV,RUIM \
+    DEVICE_PROVISIONED=1 \
+    ro.use_data_netmgrd=true \
+    persist.data.netmgrd.qos.enable=true \
+    ro.data.large_tcp_window_size=true \
+    ro.ril.hsdpa.category=14 \
+    ro.ril.hsupa.category=6 \
+    ro.ril.hsxpa=4 \
+    ro.ril.disable.cpc=1 \
+    ro.ril.def.agps.mode=1
 
 $(call inherit-product-if-exists, hardware/qcom/msm8x74/msm8x74.mk)
