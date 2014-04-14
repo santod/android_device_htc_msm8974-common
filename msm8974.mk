@@ -14,6 +14,12 @@
 # limitations under the License.
 #
 
+# Device uses ultra-high-density artwork where available
+PRODUCT_AAPT_CONFIG := hdpi xhdpi xxhdpi
+PRODUCT_AAPT_PREF_CONFIG := xxhdpi
+
+PRODUCT_BOOT_JARS += qcmediaplayer
+
 # Boot animation
 TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_WIDTH := 1080
@@ -24,6 +30,14 @@ $(call inherit-product, vendor/liquid/config/common_phone.mk)
 $(call inherit-product, vendor/liquid/config/nfc_enhanced.mk)
 $(call inherit-product, frameworks/native/build/phone-xxhdpi-2048-dalvik-heap.mk)
 $(call inherit-product-if-exists, frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk)
+
+# Audio configuration
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/audio/audio_effects.conf:system/etc/audio_effects.conf \
+    $(LOCAL_PATH)/audio/audio_policy.conf:system/etc/audio_policy.conf \
+    $(LOCAL_PATH)/audio/snd_soc_msm_2x:system/etc/snd_soc_msm/snd_soc_msm_2x \
+    $(LOCAL_PATH)/audio/snd_soc_msm_Taiko:system/etc/snd_soc_msm/snd_soc_msm_Taiko \
+    $(LOCAL_PATH)/audio/snd_soc_msm_Taiko_DMIC:system/etc/snd_soc_msm/snd_soc_msm_Taiko_DMIC
 
 # this should go away when we finish blobs, our device-specific repos
 # should inherit m8-common by themselves
@@ -61,6 +75,7 @@ PRODUCT_COPY_FILES += \
 
 # Permissions
 PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
@@ -102,6 +117,13 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     lights.msm8974
 
+# FM radio
+PRODUCT_PACKAGES += \
+    qcom.fmradio \
+    libqcomfm_jni \
+    FM2 \
+    FMRecord
+
 # OMX
 PRODUCT_PACKAGES += \
     libc2dcolorconvert \
@@ -127,6 +149,9 @@ PRODUCT_PACKAGES += \
 # Touchscreen
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.input.noresample=1
+
+# qcmediaplayer
+PRODUCT_PACKAGES += qcmediaplayer
 
 # USB
 PRODUCT_PACKAGES += \
@@ -192,13 +217,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.sf.hw=1 \
     dev.pm.dyn_samplingrate=1 \
     lpa.decode=true \
-    persist.audio.fluence.mode=endfire \
-    persist.audio.vr.enable=false \
-    persist.audio.handset.mic=digital \
-    persist.audio.speaker.location=high \
     persist.hwc.mdpcomp.enable=true \
     persist.thermal.monitor=true \
-    ro.qc.sdk.audio.fluencetype=fluence \
+    ro.qc.sdk.audio.fluencetype=none \
     ro.sf.lcd_density=420 \
     ro.telephony.call_ring.multiple=0 \
     ro.use_data_netmgrd=true \
