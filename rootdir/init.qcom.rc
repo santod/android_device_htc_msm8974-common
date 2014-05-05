@@ -913,6 +913,7 @@ service sensors /system/bin/sensors.qcom
     user root
     group root
     disabled
+    group radio cache inet misc audio sdcard_r sdcard_rw diag qcom_diag log
 
 service time_daemon /system/bin/time_daemon
    class late_start
